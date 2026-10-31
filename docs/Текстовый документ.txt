@@ -1,0 +1,3 @@
+https://developer.mozilla.org/ru/docs/Learn_web_development/Extensions/Server-side/Django
+https://sky.pro/wiki/python/sozdanie-pervogo-veb-prilozheniya-na-django/?ysclid=mvs0qw5gmu578913665
+https://proglib.io/p/kurs-django-chast-2-orm-i-osnovy-raboty-s-bazami-dannyh-2024-01-29

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang = "ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+</head>
+
+<body>
+    <h1>Регистрация</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ reg.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+</body>
+
+
+</html>

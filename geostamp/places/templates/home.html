@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная — GeoStamp</title>
+</head>
+<body>
+    <h1>Добро пожаловать в GeoStamp!</h1>
+    {% if request.session.user_id %}
+        <p>Привет, {{ request.session.user_name }}!</p>
+
+        <a href="{% url 'logout_view' %}">Выйти</a>
+
+    {% else %}
+
+        <p>Вы вошли как гость.</p>
+        <a href="{% url 'login_view' %}">Вход</a> |
+        <a href="{% url 'register_view' %}">Регистрация</a>
+
+    {% endif %}
+</body>
+</html>
