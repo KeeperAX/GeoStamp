@@ -18,5 +18,36 @@
         <a href="{% url 'register_view' %}">Регистрация</a>
 
     {% endif %}
+
+        <!-- Подключение стилей и скриптов Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Блок, в котором будет нарисована карта -->
+    <div id="map" style="height: 500px; width: 100%; border-radius: 10px;"></div>
+
+    <script>
+        // 1. Инициализация карты (указываем стартовые координаты центра и масштаб)
+        const map = L.map('map').setView([55.751244, 37.618423], 13);
+
+        // 2. Подключение визуальной подложки (тайлов) OpenStreetMap
+
+        L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
+        }).addTo(map);
+
+        // 3. Запрос координат из вашего Django API и добавление точек на карту
+        fetch('/api/places/')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(place => {
+                    // Создаем маркер для каждого заведения
+                    L.marker([place.lat, place.lon])
+                        .addTo(map)
+                        .bindPopup(`<b>${place.name}</b>`); // Всплывающая подсказка при клике
+                });
+            });
+    </script>
 </body>
 </html>
