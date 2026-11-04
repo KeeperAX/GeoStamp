@@ -3,49 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>Главная — GeoStamp</title>
+
+    <!-- Стили Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        .place-card {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Добро пожаловать в GeoStamp!</h1>
+
     {% if request.session.user_id %}
         <p>Привет, {{ request.session.user_name }}!</p>
-
         <a href="{% url 'logout_view' %}">Выйти</a>
-
     {% else %}
-
         <p>Вы вошли как гость.</p>
         <a href="{% url 'login_view' %}">Вход</a> |
         <a href="{% url 'register_view' %}">Регистрация</a>
-
     {% endif %}
 
-        <!-- Подключение стилей и скриптов Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- Блок, в котором будет нарисована карта -->
     <div id="map" style="height: 500px; width: 100%; border-radius: 10px;"></div>
 
+    <div id="card" class="place-card"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
-        // 1. Инициализация карты (указываем стартовые координаты центра и масштаб)
-        const map = L.map('map').setView([55.751244, 37.618423], 13);
+        const map = L.map('map').setView([59.9343, 30.3351], 13);
 
-        // 2. Подключение визуальной подложки (тайлов) OpenStreetMap
+        map.attributionControl.setPrefix(false);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 16,
+            attribution: 'Tiles © Esri — Esri, DeLorme, NAVTEQ'
         }).addTo(map);
 
-        // 3. Запрос координат из вашего Django API и добавление точек на карту
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text ?? '';
+            return div.innerHTML;
+        }
+
+        function openCard(id) {
+            fetch(`/api/places/${id}/`)
+                .then(response => response.json())
+                .then(place => {
+                    const card = document.getElementById('card');
+                    card.innerHTML = `
+                        <h2>${escapeHtml(place.name)}</h2>
+                        <p>${escapeHtml(place.address)}</p>
+                        <p>Рейтинг: ${place.rating.toFixed(1)}</p>
+                        <p>${escapeHtml(place.description)}</p>
+                    `;
+                    card.style.display = 'block';
+                });
+        }
+
         fetch('/api/places/')
             .then(response => response.json())
             .then(data => {
                 data.forEach(place => {
-                    // Создаем маркер для каждого заведения
                     L.marker([place.lat, place.lon])
                         .addTo(map)
-                        .bindPopup(`<b>${place.name}</b>`); // Всплывающая подсказка при клике
+                        .on('click', () => openCard(place.id));
                 });
             });
     </script>

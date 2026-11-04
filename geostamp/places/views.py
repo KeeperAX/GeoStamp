@@ -1,18 +1,28 @@
 from django.http.response import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models import Place
+
+def serialize_place(place):
+    return {
+        "id": place.id,
+        "name": place.name,
+        "address": place.address,
+        "description": place.description,
+        "rating": place.rating,
+        "lat": place.latitude,
+        "lon": place.longitude,
+    }
+
 def places_api(request):
     places = Place.objects.all()
-    data = [
-        {
-            "name": place.name,
-            "lat": place.latitude,
-            "lon": place.longitude,
-            "rating": place.rating,
-        } for place in places
-        ]
+    data = [serialize_place(p) for p in places]
     return JsonResponse(data, safe=False)
     
+def place_detail_api(request, pk):
+    place = get_object_or_404(Place, pk=pk)
+    return JsonResponse(serialize_place(place))
+
+
 def home_view(request):
     return render(request, 'home.html')
