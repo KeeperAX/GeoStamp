@@ -8,10 +8,12 @@ def serialize_place(place):
         "id": place.id,
         "name": place.name,
         "address": place.address,
+        "street": place.street,
         "description": place.description,
         "rating": place.rating,
         "lat": place.latitude,
         "lon": place.longitude,
+        "stamp_image": (place.stamp_image if place.stamp_image else None),
     }
 
 def places_api(request):
