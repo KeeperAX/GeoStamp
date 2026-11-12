@@ -66,7 +66,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## Документация и управление проектом
+## Документация и управление проектом.
 
 - **Репозиторий:** [GitHub — GeoStamp](https://github.com/KeeperAX/GeoStamp)
 - **Документация:** [Папка `docs`](docs/)
