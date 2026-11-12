@@ -1,0 +1,162 @@
+body,
+h1,
+h2,
+p {
+  margin: 0;
+  font-weight: normal;
+  font-size: 100%;
+}
+
+h1 {
+    color: white;
+    font-weight: 600;
+    font-size: 30px;
+}
+
+h2 {
+    color:#361f78;
+    font-weight: 600;
+    font-size: 30px;
+}
+
+body {
+    background-color: white;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.top-bar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    background-image: linear-gradient(to right, #361f78, #3a3f96, #3e5db2, #467bcc, #5399e5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo img {
+    height: 40px;      
+    width: auto;
+    object-fit: contain;
+}
+
+.service-data { margin: 90px 20px 50px;}
+
+.service-data p {
+    color: #361f78;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.map {
+    margin: 20px auto 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.map img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+}
+
+
+.top-bar-button {
+    border: 1px solid rgba(255,255,255,.85);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.28);
+    color: white;
+    padding: 9px 22px;
+    font: 600 15px Inter, Arial, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+}
+.top-bar-button:hover { background: rgba(255,255,255,.28); }
+body.modal-open { overflow: hidden; }
+.modal-backdrop[hidden] { display: none; }
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(12, 15, 35, .62);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.login-modal {
+    position: relative;
+    width: min(100%, 360px);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 28px;
+    border-radius: 14px;
+    background: white;
+    box-shadow: 0 16px 45px rgba(0,0,0,.3);
+    font-family: Inter, Arial, sans-serif;
+}
+.login-modal h2 { margin: 0 0 22px; color: #361f78; }
+.modal-close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    border: 0;
+    background: transparent;
+    color: #555;
+    font-size: 28px;
+    cursor: pointer;
+}
+.login-form p { margin: 0 0 14px; font-size: 14px;}
+.login-form label { display: block; margin-bottom: 6px;  font-size: 14px;}
+.login-form input:not([type="hidden"]):not([type="checkbox"]), .login-form select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #c6c6d4;
+    border-radius: 7px;
+}
+.login-form .errorlist { padding-left: 18px; }
+.submit-button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    background: #3e5db2;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+.submit-button:hover { background: #361f78; }
+.register-hint { margin: 18px 0 0; font-size: 14px; text-align: center; }
+
+/* Обе формы используют одинаковое оформление модального окна. */
+.text-link {
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: #3e5db2;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.text-link:hover { color: #361f78; }
+.login-form input[type="checkbox"] { width: auto; margin-right: 6px; accent-color: #3e5db2; }
+.login-form p:has(input[type="checkbox"]) label { display: inline; }
+.form-error { margin: 8px 0;}
+.login-form .errorlist, .login-form .form-error { color: #b00020; }
+.login-form .helptext { display: block; margin-top: 5px; font-size: 12px; }
