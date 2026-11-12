@@ -2,21 +2,146 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Главная — GeoStamp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Главная GeoStamp</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+    <link rel="icon" href="{% static 'images/logo.png' %}">
 </head>
+
 <body>
-    <h1>Добро пожаловать в GeoStamp!</h1>
-    {% if request.session.user_id %}
-        <p>Привет, {{ request.session.user_name }}!</p>
+    <header class="top-bar">
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Логотип GeoStamp">
+            <h1>GeoStamp</h1>
+        </div>
+        {% if request.session.user_id %}
+            <a class="top-bar-button" href="{% url 'logout_view' %}">Выйти</a>
+        {% else %}
+            <button class="top-bar-button" id="open-login" type="button" aria-haspopup="dialog" aria-controls="login-modal">Войти</button>
+        {% endif %}
+    </header>
 
-        <a href="{% url 'logout_view' %}">Выйти</a>
+    <main class="service-data">
+        <h2>Добро пожаловать в GeoStamp!</h2>
+        {% if request.session.user_id %}
+            <p>Привет, {{ request.session.user_name }}!</p>
+        {% else %}
+            <p>Вы вошли как гость.</p>
+        {% endif %}
+    </main>
 
-    {% else %}
+    <section class="map">
+        <h2>Подождите, карта загружается</h2>
+        <img src="{% static 'images/mem.jfif' %}" alt="Изображение пока нет карты">
+    </section>
 
-        <p>Вы вошли как гость.</p>
-        <a href="{% url 'login_view' %}">Вход</a> |
-        <a href="{% url 'register_view' %}">Регистрация</a>
+    {% if not request.session.user_id %}
+        <div class="modal-backdrop" id="login-modal" hidden>
+            <section class="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title" tabindex="-1">
+                <button type="button" class="modal-close" data-close-modal aria-label="Закрыть окно">&times;</button>
+                <h2 id="login-title">Авторизация</h2>
+                <form method="POST" action="{% url 'login_view' %}" class="login-form">
+                    {% csrf_token %}
+                    {{ avt.as_p }}
+                    {% if login_error %}<p class="form-error" role="alert">{{ login_error }}</p>{% endif %}
+                    <button class="submit-button" type="submit">Войти</button>
+                </form>
+                <p class="register-hint">Нет аккаунта? <button type="button" class="text-link" data-switch-modal="register-modal">Зарегистрироваться</button></p>
+            </section>
+        </div>
 
+        <div class="modal-backdrop" id="register-modal" hidden>
+            <section class="login-modal" role="dialog" aria-modal="true" aria-labelledby="register-title" tabindex="-1">
+                <button type="button" class="modal-close" data-close-modal aria-label="Закрыть окно">&times;</button>
+                <h2 id="register-title">Регистрация</h2>
+                <form method="POST" action="{% url 'register_view' %}" class="login-form">
+                    {% csrf_token %}
+                    {{ reg.as_p }}
+                    <button class="submit-button" type="submit">Зарегистрироваться</button>
+                </form>
+                <p class="register-hint">Уже есть аккаунт? <button type="button" class="text-link" data-switch-modal="login-modal">Войти</button></p>
+            </section>
+        </div>
+
+        <div id="modal-settings"
+            data-register-open="{{ register_modal_open|yesno:'true,false' }}"
+            data-login-open="{% if login_modal_open or login_error or avt.errors %}true{% else %}false{% endif %}"
+            hidden>
+        </div>
+
+        <script>
+            const modals = Array.from(document.querySelectorAll('.modal-backdrop'));
+            const loginModal = document.getElementById('login-modal');
+            const registerModal = document.getElementById('register-modal');
+            let returnFocus = null;
+
+            function activeModal() {
+                return modals.find(modal => !modal.hidden);
+            }
+
+            function showModal(modal, rememberFocus = true) {
+                if (rememberFocus && !activeModal()) returnFocus = document.activeElement;
+                modals.forEach(item => { item.hidden = item !== modal; });
+                document.body.classList.add('modal-open');
+                const firstInput = modal.querySelector('input:not([type="hidden"]):not([type="checkbox"])');
+                (firstInput || modal.querySelector('[data-close-modal]')).focus();
+            }
+
+            function closeModal() {
+                modals.forEach(modal => { modal.hidden = true; });
+                document.body.classList.remove('modal-open');
+                if (returnFocus && returnFocus.isConnected) returnFocus.focus();
+                else document.getElementById("open-login").focus();
+            }
+
+            const openLoginButton = document.getElementById('open-login');
+
+            if (openLoginButton) {
+                openLoginButton.addEventListener('click', () => {
+                    showModal(loginModal);
+                });
+            }
+
+            document.querySelectorAll('[data-switch-modal]').forEach(button => {
+                button.addEventListener('click', () => showModal(document.getElementById(button.dataset.switchModal), false));
+            });
+            document.querySelectorAll('[data-close-modal]').forEach(button => {
+                button.addEventListener('click', closeModal);
+            });
+            modals.forEach(modal => {
+                modal.addEventListener('click', event => {
+                    if (event.target === modal) closeModal();
+                });
+            });
+            document.addEventListener('keydown', event => {
+                const modal = activeModal();
+                if (!modal) return;
+                if (event.key === 'Escape') {
+                    closeModal();
+                    return;
+                }
+                if (event.key === 'Tab') {
+                    const elements = [...modal.querySelectorAll('button, a[href], input:not([type="hidden"]), select, textarea')]
+                        .filter(el => !el.disabled && el.getClientRects().length);
+                    if (!elements.length) return;
+                    const first = elements[0], last = elements[elements.length - 1];
+                    if (event.shiftKey && document.activeElement === first) {
+                        event.preventDefault(); last.focus();
+                    } else if (!event.shiftKey && document.activeElement === last) {
+                        event.preventDefault(); first.focus();
+                    }
+                }
+            });
+
+            const modalSettings = document.getElementById('modal-settings');
+
+            if (modalSettings.dataset.registerOpen === 'true') {
+                showModal(registerModal);
+            } else if (modalSettings.dataset.loginOpen === 'true') {
+                showModal(loginModal);
+            }
+        </script>
     {% endif %}
 </body>
 </html>
