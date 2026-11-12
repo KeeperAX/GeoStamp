@@ -8,4 +8,3 @@ class User(models.Model):
     email_confirmed = models.BooleanField(default = False) #Активированна ли почта
     registered_on = models.DateTimeField(auto_now_add = True)
 
-

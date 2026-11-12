@@ -81,8 +81,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'GeoStamp',
-        'USER': 'redmist',
-        'PASSWORD': '784247581',
+        'USER': 'postgres',
+        'PASSWORD': 'Alexkov19',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -123,9 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
 STATICFILES_DIRS = [
-    BASE_DIR / "users" / "templates",
     BASE_DIR / "static",
 ]
 
@@ -139,4 +137,4 @@ MAILERS = {
 }
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR, 'media'
+MEDIA_ROOT = BASE_DIR / 'media'

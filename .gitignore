@@ -1,6 +1,14 @@
 .idea/
 .venv/
+venv/
+env/
 
 __pycache__/
 *.py[cod]
 *$py.class
+
+media/
+staticfiles/
+
+.env
+*.sqlite3
