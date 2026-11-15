@@ -81,8 +81,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'GeoStamp',
-        'USER': 'postgres',
-        'PASSWORD': 'Alexkov19',
+        'USER': 'redmist',
+        'PASSWORD': '784247581',
         'HOST': 'localhost',
         'PORT': '5432',
     }
