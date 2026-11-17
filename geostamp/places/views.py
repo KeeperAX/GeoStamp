@@ -26,8 +26,8 @@ def place_detail_api(request, pk):
 
 
 def home_view(request):
-    # Передаем пустые формы для модальных окон фронтендера на главной странице
     return render(request, 'home.html', {
         'avt': LoginForm(),
         'reg': UserRegisterForm(),
+        'pending_email': request.session.get('pending_email'),
     })

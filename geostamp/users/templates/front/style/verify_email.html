@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Подтверждение почты GeoStamp</title>
+</head>
+<body>
+
+    <h2>Подтверждение электронной почты</h2>
+
+    <p>Нажмите кнопку, чтобы подтвердить свой адрес.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">
+            Подтвердить почту
+        </button>
+    </form>
+
+</body>
+</html>

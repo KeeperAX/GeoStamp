@@ -5,6 +5,8 @@ from places import views
 from places.views import home_view
 from django.conf.urls.static import static
 from django.conf import settings
+from users.views import verify_email
+
 urlpatterns = [
     path('', home_view, name='home'),
     path('login/', login_view, name='login_view'),
@@ -13,6 +15,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/places/', views.places_api, name='places_api'),
     path('api/places/<int:pk>/', views.place_detail_api, name='place_detail_api'),
+    path('verify-email/<str:token>/', verify_email, name='verify_email'),
 ]
 
 if settings.DEBUG:
