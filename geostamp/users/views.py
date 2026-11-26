@@ -1,38 +1,9 @@
 from django.shortcuts import render, redirect
-from .register_forms import UserRegisterForm, LoginForm
+from .register_forms import UserRegisterForm, LoginForm, ProfileForm
 from .models import User
 
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = LoginForm(request.POST)
-#         if form.is_valid():
-#             email = form.cleaned_data['email']
-#             password = form.cleaned_data['password']
-#             user = authenticate(request, username=email, password=password)
-#
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect('home')
-#     else:
-#         form = LoginForm()
-#     return render(request, 'front/login.html', {'avt': form})
-#
-# def register_view(request):
-#     if request.method == 'POST':
-#         form = UserRegisterForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             login(request, form.save())
-#             return redirect('home')
-#
-#     else:
-#         form = UserRegisterForm()
-#
-#     return render(request, 'front/register.html', {'reg': form})
-# def logout_view(request):
-#     logout(request)
-#     return redirect('home')
-
+from django.shortcuts import render, redirect, get_object_or_404
+from places.models import Visit
 
 def login_view(request):                                                #Функция для обработки входа пользователя
     if request.method == 'POST':                                        #Проверяет, была ли отправлена форма (метод POST)
@@ -76,3 +47,24 @@ def register_view(request):
 def logout_view(request):   # Функцияе для выхода из аккаунта
     request.session.flush() # Полностью очищает данные текущей сессии
     return redirect('home') # Перенаправляет пользователя на главную страницу
+
+def profile_view(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login_view')
+
+    user = get_object_or_404(User, pk=user_id)
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_view')
+    else:
+        form = ProfileForm(instance=user)
+
+
+    return render(request, 'front/profile.html', {
+        'user': user,
+        'form': form,
+    })

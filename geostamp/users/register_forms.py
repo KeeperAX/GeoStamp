@@ -27,3 +27,11 @@ class UserRegisterForm(forms.ModelForm):                                    #С�
             'email': 'Почта',
             'password': 'Пароль',
         }
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('password',)
+        labels = {
+            'password': 'Новый пароль',
+        }

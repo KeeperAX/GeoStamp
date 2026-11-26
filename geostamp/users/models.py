@@ -9,3 +9,5 @@ class User(models.Model):
     registered_on = models.DateTimeField(auto_now_add = True)
     points = models.PositiveIntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.name} ({self.email})'
