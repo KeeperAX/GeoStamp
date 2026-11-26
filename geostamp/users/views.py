@@ -34,22 +34,22 @@ from .models import User
 #     return redirect('home')
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
+def login_view(request):                                                #Функция для обработки входа пользователя
+    if request.method == 'POST':                                        #Проверяет, была ли отправлена форма (метод POST)
+        form = LoginForm(request.POST)                                  #Создает экземпляр входа и заполняет его данными, пришедшими от пользователя
+        if form.is_valid():                                             #Валидация формы
+            email = form.cleaned_data['email']                          #проверяем форму и проверяем отчищенное значение
             password = form.cleaned_data['password']
-            try:
-                user = User.objects.get(email=email, password=password)
-                request.session['user_id'] = user.id
-                request.session['user_name'] = user.name
-                return redirect('home')
+            try:                                                        #Проверка если пользователь не найден
+                user = User.objects.get(email=email, password=password) #Ищет в БД ровно одного пользователя с точным совпадением почты и пароля
+                request.session['user_id'] = user.id                    #Сохраняет id пользователя в сессию
+                request.session['user_name'] = user.name                #Сохраняет имя пользователя в сессию
+                return redirect('home')                                 #перенаправляет на главную страницу
             except User.DoesNotExist:
                 form.add_error(None, 'Неверная почта или пароль')
     else:
-        form = LoginForm()
-    return render(request, 'home.html', {
+        form = LoginForm()                                              # Создает пустую форму входа
+    return render(request, 'home.html', {           #Для рендеринга
         'avt': form,
         'reg': UserRegisterForm(),
         'open_login_modal': True
@@ -73,6 +73,6 @@ def register_view(request):
     })
 
 
-def logout_view(request):
-    request.session.flush()
-    return redirect('home')
+def logout_view(request):   # Функцияе для выхода из аккаунта
+    request.session.flush() # Полностью очищает данные текущей сессии
+    return redirect('home') # Перенаправляет пользователя на главную страницу

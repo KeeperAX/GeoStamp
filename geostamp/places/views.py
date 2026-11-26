@@ -94,7 +94,7 @@ def add_review_api(request, pk):
         return JsonResponse({'error': msg}, status=400)
 
 def home_view(request):
-    # Передаем пустые формы для модальных окон фронтендера на главной странице
+    # Передаем пустые формы для окон фронтендера на главной странице
     return render(request, 'home.html', {
         'avt': LoginForm(),
         'reg': UserRegisterForm(),

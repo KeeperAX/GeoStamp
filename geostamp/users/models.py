@@ -7,4 +7,5 @@ class User(models.Model):
     password = models.CharField(max_length=64, null=False)
     email_confirmed = models.BooleanField(default = False) #Активированна ли почта
     registered_on = models.DateTimeField(auto_now_add = True)
+    points = models.PositiveIntegerField(default=0)
 
