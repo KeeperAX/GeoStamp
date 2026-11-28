@@ -2,7 +2,6 @@ import json
 from django.http.response import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Place, Review, Visit
-from users.register_forms import LoginForm, UserRegisterForm
 from users.models import User
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
@@ -65,9 +64,10 @@ def checkin_place_api(request, pk):
 
     try:
         body = json.loads(request.body)
-        secret_key = body.get('secret_key', '')
-        create_visit(user=user, place=place, secret_key=secret_key)
-        return JsonResponse({'status': 'ok', 'message': 'Посещение подтверждено! Теперь вы можете оставить отзыв.'}, status=201)
+        if not isinstance(body, dict):
+            return JsonResponse({'error': 'Неверный формат запроса.'},status=400)
+        _, stamp_created = create_place_visit(place=place,user=user, secret_key=body.get('secret_key', ''))
+        return JsonResponse({'status': 'ok', 'message': 'Посещение подтверждено! Теперь вы можете оставить отзыв.', 'stamp_awarded': stamp_created}, status=201)
     except ValidationError as e:
         msg = e.messages[0] if hasattr(e, 'messages') else str(e)
         return JsonResponse({'error': msg}, status=400)

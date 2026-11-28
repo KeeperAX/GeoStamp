@@ -16,7 +16,7 @@ class Place(models.Model):
     address = models.CharField(max_length=100, default='')
     latitude = models.FloatField(validators=[MinValueValidator(-90), MaxValueValidator(90)])
     longitude = models.FloatField(validators=[MinValueValidator(-180), MaxValueValidator(180)])
-    stamp_image = models.ImageField(upload_to='stamps/', blank=True, null=True, unique=True) # Фото заведения
+    stamp_image = models.ImageField(upload_to='stamps/', blank=True, null=True, unique=True)
 
     secret_key = models.CharField(max_length=8, unique=True, default=generate_place_code, editable=False,
                                   validators=[RegexValidator(regex=r'^[0-9]{8}$', message='Код состоит из 8 цифр')])
